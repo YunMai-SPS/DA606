@@ -1,0 +1,388 @@
+---
+title: "DA606 final project"
+author: "Yun Mai"
+date: "March 23, 2017"
+output:
+  html_document: default
+  github_document: default
+---
+
+```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Data Preparation
+
+Load packages
+```{r}
+library(RCurl)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(knitr)
+library(ggplot2)
+```
+
+
+```{r}
+# Load data from Github.
+url <- getURL("https://raw.githubusercontent.com/YunMai-SPS/DA606_homework/master/final_project/ECLS_2011_K2.csv")
+ 
+library(data.table)
+earlyedu <- fread(url, header = T, sep = ',')
+head(earlyedu)
+```
+
+```{r}
+# Load value lables from Github.
+lable <- read.csv("https://raw.githubusercontent.com/YunMai-SPS/DA606_homework/master/final_project/variablelable.csv")
+head(lable)
+```
+
+```{r}
+value <- read.csv("https://raw.githubusercontent.com/YunMai-SPS/DA606_homework/master/final_project/variablevalue.csv")
+head(value)
+```
+
+Select the semester for anlysis.The prefix of the variables name could be infered from the table below. The prefix are 1:2010 fall(K1): 2011 spring(K2); 3, 2011 fall(11f); 4: 2012 sprinsg(G1_2); 5: 2012 fall(12f): 6: 2013 spring(G2_2).
+
+```{r}
+# There are a lot of columns in these data frames. This will subset the dataframes to include only the variables we are interested in. We will also rename the columns to be more descriptive.
+# According the data completeness, I will subset the data to get the survey results from Kindergarten 1st semester(1), Kindergarten 2nd semester(2), first grade 2nd semester(4), second grade 2nd semester(6). 
+
+# reading scores
+myreading <- c("CHILDID","X1RTHETK2",	"X2RTHETK2",	"X4RTHETK2",	"X6RTHETK2") 
+reading <- subset(earlyedu,,myreading)
+colnames(reading) <- c("CHILDID", "K1_READ", "K2_READ", "G1_2_READ", "G2_2_READ")
+
+# math scores
+mymath <- c("CHILDID","X1MTHETK2",	"X2MTHETK2",	"X4MTHETK2",	"X6MTHETK2") 
+math <- subset(earlyedu,,mymath)
+colnames(math) <- c("CHILDID", "K1_Math", "K2_Math", "G1_2_Math", "G2_2_Math")
+
+# science scores
+myscience <- c("CHILDID", "X2STHETK2",	"X4STHETK2",	"X6STHETK2") 
+science <- subset(earlyedu,,myscience)
+colnames(science) <- c("CHILDID", "K2_SCI", "G1_2_SCI", "G2_2_SCI")
+
+# The Dimensional Change Card Sort (DCCS): A Method of Assessing Executive Function in Children
+myDCCSTOT <- c("CHILDID", "X1DCCSTOT",	"X2DCCSTOT",	"X4DCCSTOT") 
+DCCSTOT <- subset(earlyedu,,myDCCSTOT)
+colnames(DCCSTOT) <- c("CHILDID", "K1_DCCSTOT", "K2_DCCSTOT", "G1_2_DCCSTOT")
+
+# DCCS composite score by summing the post-switch score and the Border Game score. Relative completed survay results are only available at 6th semester.
+myDCCSSCR <- c("CHILDID", "X6DCCSSCR") 
+DCCSSCR <- subset(earlyedu,,myDCCSSCR)
+colnames(DCCSSCR) <- c("CHILDID", "G2_2_DCCSSCR")
+
+# GIFTED-TALENT not offered in K. Survay results are only available at 2nd and 4th semester.
+GTKlevels <- c("yes", "no", "NA")
+myGTK <- c("CHILDID", "S2GIFNO","S4GIFNO") 
+GTK <- subset(earlyedu,,myGTK)
+GTK$S2GIFNO <- str_replace_all(GTK$S2GIFNO,"(^\\-9)|(^\\-1)","NA") %>% 
+  str_replace_all("1","yes") %>% 
+  str_replace_all("2","no")
+GTK$S4GIFNO <- str_replace_all(GTK$S4GIFNO,"(^\\-9)|(^\\-1)","NA") %>% 
+  str_replace_all("0","yes") %>%
+  str_replace_all("1","no")
+colnames(GTK) <- c("CHILDID", "K2_GIFK", "G1_2_GIFK")
+
+# GIFTED-TALENT offered at some grades or not offered at the school.Survay results are only available at 2nd and 4th semester.
+GTSlevels <- c("yes", "no", "NA")
+myGTS <- c("CHILDID", "S2GIFNOG","S4GIFNOG") 
+GTS <- subset(earlyedu,,myGTS)
+GTS$S2GIFNOG <- str_replace_all(GTS$S2GIFNOG,"(^\\-9)|(^\\-1)","NA") %>% 
+   str_replace_all("1","yes") %>% 
+  str_replace_all("2","no")
+GTS$S4GIFNOG <- str_replace_all(GTS$S4GIFNOG,"(^\\-9)|(^\\-1)","NA") %>%
+  str_replace_all("0","yes") %>% 
+  str_replace_all("1","no")
+colnames(GTS) <- c("CHILDID", "K2_GIFS", "G1_2_GIFS")
+
+
+# A CUTOFF DATE FOR CHILD TO TURN FIVE TO ENTER KINDERGARTEN
+Sep1cutofflevels <- c(1,2,NA)
+mycutoff <- c("CHILDID", "S6GIFNO") 
+Sep1cutoff <- subset(earlyedu,,mycutoff)
+Sep1cutoff$S6GIFNOt <- str_replace_all(Sep1cutoff$S6GIFNO,"0","yes") %>% 
+  str_replace_all("1","no")
+colnames(Sep1cutoff) <- c("CHILDID", "G2_2_Sep1Cut", "G2_2_Sep1Cut_t")
+
+# Whether PreK is helpful for prepare children for Kindergarten.
+PreKlevles <- c(1, 2, 3, 4, 5)
+myprek <- c("CHILDID", "A1ATNDPR") 
+PreK <- subset(earlyedu,,myprek)
+PreK$A1ATNDPR  <- str_replace_all(PreK$A1ATNDPR,"^\\-9","NA") 
+PreK$A1ATNDPRt  <- str_replace_all(PreK$A1ATNDPR, "1","STRONGLY DISAGREE") %>% 
+  str_replace_all("2","DISAGREE") %>% 
+  str_replace_all("3","NEITHER AGREE NOR DISAGREE") %>% 
+  str_replace_all("4","AGREE") %>% 
+  str_replace_all("5","STRONGLY AGREE") 
+colnames(PreK) <- c("CHILDID", "PreK", "PreKt")
+
+agelevels <- c(4, 5, 6, 7, 8)
+myage <- c("CHILDID", "X1KAGE_R", "X2KAGE_R", "X4AGE", "X6AGE") 
+Age <- subset(earlyedu,,myage)
+Age[,2]<- Age[,2]/12
+Age[,3]<- Age[,3]/12
+Age[,4]<- Age[,4]/12
+Age[,5]<- Age[,5]/12
+colnames(Age) <- c("CHILDID", "K1_AGE", "K2_AGE", "G1_2_AGE", "G2_2_AGE")
+
+genderLevels <- c('Male', 'Female')
+mygender <- c("CHILDID", "X_CHSEX_R") 
+Gender <- subset(earlyedu,,mygender)
+Gender$X_CHSEX_R <- str_replace_all(Gender$X_CHSEX_R,"1","Male") %>% 
+  str_replace_all("2","Female")
+colnames(Gender) <- c("CHILDID", "CHSEX")
+
+decreasesizelevel <- c("yes", "no", "NA")
+mydecreasesize <- c("CHILDID", "S2TT1CLA", "S4TT1CLA", "S6TT1CLA") 
+Classsize <- subset(earlyedu,,mydecreasesize)
+Classsize$S2TT1CLA <- str_replace_all(Classsize$S2TT1CLA,"(^\\-9)|(^\\-1)","NA") %>% 
+  str_replace_all("1","yes") %>% 
+  str_replace_all("2","no")
+Classsize$S4TT1CLA <- str_replace_all(Classsize$S4TT1CLA,"(^\\-9)|(^\\-1)","NA") %>% 
+  str_replace_all("1","yes") %>%
+  str_replace_all("2","no")
+Classsize$S6TT1CLA <- str_replace_all(Classsize$S6TT1CLA,"(^\\-9)|(^\\-1)","NA") %>% 
+  str_replace_all("1","yes") %>% 
+  str_replace_all("2","no")
+colnames(Classsize) <- c("CHILDID", "K2_CLSI", "G1_2_CLSI", "G2_2_CLSI")
+
+regionlevels <-c(1,2,3,4,NA)
+myregion <- c("CHILDID", "X1LOCALE", "X2LOCALE", "X4LOCALE", "X6LOCALE") 
+Region <- subset(earlyedu,,myregion)
+Region$X1LOCALE <- str_replace_all(Region$X1LOCALE,"(^\\-9)|(^\\-1)","NA") 
+Region$X1LOCALt <- str_replace_all(Region$X1LOCALE, "1", "CITY") %>%
+  str_replace_all("2", "SUBURB") %>% 
+  str_replace_all("3", "TOWN") %>% 
+  str_replace_all("4", "RURAL") 
+Region$X2LOCALE <- str_replace_all(Region$X2LOCALE,"(^\\-9)|(^\\-1)","NA") 
+Region$X2LOCALt <- str_replace_all(Region$X2LOCALE, "1", "CITY") %>%
+  str_replace_all("2", "SUBURB") %>% 
+  str_replace_all("3", "TOWN") %>% 
+  str_replace_all("4", "RURAL") 
+Region$X4LOCALE <- str_replace_all(Region$X4LOCALE,"(^\\-9)|(^\\-1)","NA")
+Region$X4LOCALt <- str_replace_all(Region$X4LOCALE, "1", "CITY") %>%
+  str_replace_all("2", "SUBURB") %>% 
+  str_replace_all("3", "TOWN") %>% 
+  str_replace_all("4", "RURAL")
+Region$X6LOCALE <- str_replace_all(Region$X6LOCALE,"(^\\-9)|(^\\-1)","NA")
+Region$X6LOCALt <- str_replace_all(Region$X6LOCALE, "1", "CITY") %>%
+  str_replace_all("2", "SUBURB") %>% 
+  str_replace_all("3", "TOWN") %>% 
+  str_replace_all("4", "RURAL")
+colnames(Region) <- c("CHILDID", "K1_LOC","K2_LOC", "G1_2_LOC", "G2_2_LOC", "K1_LOCt","K2_LOCt", "G1_2_LOCt", "G2_2_LOCt")
+
+# Parents getting involve in school volunteer 
+parentschoolhlplevels <- c(0, 1, 2, 3, 4,5,NA)
+myhlp <- c("CHILDID", "A2REGHLP", "A4REGHLP", "A6REGHLP") 
+Prthlp <- subset(earlyedu,,myhlp)
+Prthlp$A2REGHLP  <- str_replace_all(Prthlp$A2REGHLP,"^\\-9","NA")
+Prthlp$A4REGHLP  <- str_replace_all(Prthlp$A4REGHLP,"^\\-9","NA")
+Prthlp$A6REGHLP  <- str_replace_all(Prthlp$A6REGHLP,"^\\-9","NA")
+colnames(Prthlp) <- c("CHILDID", "K2_Prthlp", "G1_2_Prthlp", "G2_2_Prthlp")
+
+parentworklevels <- c("b35h", "a35h", "NA")
+myprtwork <- c("CHILDID", "X1PAR1EMP","X4PAR1EMP_I", "X6PAR1EMP_I") 
+Prtwork <- subset(earlyedu,,myprtwork)
+Prtwork$X1PAR1EMP <- str_replace_all(Prtwork$X1PAR1EMP,"(^\\-9)|(^3)|(^4)","NA") %>% 
+  str_replace_all("1","a35h") %>% 
+  str_replace_all("2","blw35h")
+Prtwork$X4PAR1EMP_I <- str_replace_all(Prtwork$X4PAR1EMP_I,"(^\\-9)|(^3)|(^4)","NA") %>% 
+  str_replace_all("1","a35h") %>% 
+  str_replace_all("2","blw35h")
+Prtwork$X6PAR1EMP_I <- str_replace_all(Prtwork$X6PAR1EMP_I,"(^\\-9)|(^3)|(^4)","NA") %>% 
+  str_replace_all("1","a35h") %>% 
+  str_replace_all("2","blw35h")
+colnames(Prtwork) <- c("CHILDID", "K1_PrtW", "G1_2_PrtW", "G2_2_PrtW")
+
+# HIGHEST EDUCATION LEVEL PARENTS ACHIEVED
+Parentedulevles <- c(1, 2, 3, 4, 5, 6, 7) 
+myedu <- c("CHILDID", "A1HGHPAR") 
+Parentedu <- subset(earlyedu,,myedu)
+Parentedu$A1HGHPAR <- str_replace_all(Parentedu$A1HGHPAR, "(\\-9)|(8)", "NA")
+Parentedu$A1HGHPARt <- str_replace_all(Parentedu$A1HGHPAR,"1","DID NOT COMPLETE HIGH SCHOOL") %>%
+  str_replace_all("2","HIGH SCHOOL") %>% 
+  str_replace_all("3","SOME COLLEGE") %>% 
+  str_replace_all("4","ASSOCIATE'S DEGREE") %>% 
+  str_replace_all("5","BACHELOR") %>% 
+  str_replace_all("6","MASTER") %>% 
+  str_replace_all("7","BEYOND A MASTER")
+colnames(Parentedu) <- c("CHILDID", "PrtEDU", "PrtEDUt")
+
+earlychildhood <- inner_join(Age, Gender, by = "CHILDID") %>%
+  inner_join(reading, by = "CHILDID") %>% 
+  inner_join(math, by = "CHILDID") %>% 
+  inner_join(science, by = "CHILDID") %>% 
+  inner_join(DCCSTOT, by = "CHILDID") %>% 
+  inner_join(DCCSSCR, by = "CHILDID") %>%  
+  inner_join(GTK, by = "CHILDID") %>% 
+  inner_join(GTS, by = "CHILDID") %>% 
+  inner_join(Sep1cutoff, by = "CHILDID") %>%
+  inner_join(Classsize, by = "CHILDID") %>%
+  inner_join(PreK, by = "CHILDID") %>% 
+  inner_join(Region, by = "CHILDID") %>% 
+  inner_join(Prthlp, by = "CHILDID") %>% 
+  inner_join(Prtwork, by = "CHILDID") %>% 
+  inner_join(Parentedu, by = "CHILDID")
+
+head(earlychildhood)
+```
+
+```{r}
+# In order to investigate the correlation between age and reading skill. the reading score data from first semester(K1), 2nd semester(K2), 4th semester(grade 1_2), 6th semester(grade2_2), and the data about September cutoff will be further cleaned. filter cases that don't have "NA".
+
+# remove rows with NA in reading score
+earlychildhood1 <- earlychildhood[!is.na(earlychildhood$K1_READ),]
+earlychildhood2 <- earlychildhood[!is.na(earlychildhood$K2_READ),]
+earlychildhood3 <- earlychildhood[!is.na(earlychildhood$G1_2_READ),]
+earlychildhood4 <- earlychildhood[!is.na(earlychildhood$G2_2_READ),]
+
+# remove rows with NA in September 1st cutoff  
+earlychildhood5 <- earlychildhood1[!is.na(earlychildhood1$G2_2_Sep1Cut_t),]
+earlychildhood6 <- earlychildhood2[!is.na(earlychildhood2$G2_2_Sep1Cut_t),]
+earlychildhood7 <- earlychildhood3[!is.na(earlychildhood3$G2_2_Sep1Cut_t),]
+earlychildhood8 <- earlychildhood4[!is.na(earlychildhood4$G2_2_Sep1Cut_t),]
+
+# remove rows with NA in PrtEDU
+earlychildhood9 <- filter(earlychildhood1, PrtEDU != "NA")
+earlychildhood10 <- filter(earlychildhood2, PrtEDU != "NA")
+earlychildhood11 <- filter(earlychildhood3, PrtEDU != "NA")
+earlychildhood12 <- filter(earlychildhood4, PrtEDU != "NA")
+
+length(earlychildhood5$G2_2_Sep1Cut)
+# 12992
+length(earlychildhood6$G2_2_Sep1Cut)
+# 13184
+length(earlychildhood7$G2_2_Sep1Cut)
+# 15007
+length(earlychildhood8$G2_2_Sep1Cut)
+# 16374
+length(earlychildhood10$PrtEDU)
+# 17215
+length(earlychildhood10$PrtEDU)
+# 17215
+length(earlychildhood11$PrtEDU)
+# 15132
+length(earlychildhood12$PrtEDU)
+# 13850
+
+```
+### Research question 
+
+**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+
+Q1.1 Are the students from the schools who use the 5-year-old cutoff for Kindergarten entrance have better academic performance? 
+Q1.2 Does parents' education level have effects on children's academic performance in the early childhood?
+
+### Cases 
+
+**What are the cases, and how many are there?**
+
+Each case represents children who participated, or whose parent participated, in at least one of the two kindergarten data collections (Fall 2010 or Spring 2011). For question 1.1, there are 12992 observations in the data set for 1st semester reading score, 13184 observations in the data set for 2nd semester reading score, 15007 observations in the data set for 4th semester reading score, and 16374 observations in the data set for 6th semester reading score.
+
+For question 1.2, there are 17215 observations in the data set for 1st semester reading score, 17215 observations in the data set for 2nd semester reading score, 15132 observations in the data set for 4th semester reading score, and 13850 observations in the data set for 6th semester reading score.
+
+### Data collection 
+
+**Describe the method of data collection.**
+
+The ECLS-K:2011 is the third and latest study in the Early Childhood Longitudinal Study (ECLS) program collected by the [National Center for Educational Statistics](http://nces.ed.gov//) (NCES) from 2010 fall to 2013 spring. Survy were conduct every semester and data from the 2010 fall, 2011 spring, 2012 spring, and 2013 spring are more completed.
+
+
+### Type of study 
+
+**What type of study is this (observational/experiment)?**
+
+This is an observational study.
+
+### Data Source 
+
+**If you collected the data, state self-collected. If not, provide a citation/link.**
+
+Data is collected by NCES and is available online here: https://nces.ed.gov/ecls/dataproducts.asp. For this project, data were download and loaded into SPSS as the website suggests, cleaned up (remove most of the repressed variables) and converted to CSV files.
+
+The manual "ECLS-K:2011 Kindergarten User's Manual, Public Version PDF File" and "ECLS-K:2011 Kindergarten-Second Grade User's Manual, Public Version PDF File"
+is available here: https://nces.ed.gov/ecls/dataproducts.asp. The Eclectronic Code Book could be downloaded from the website too.
+
+
+### Response 
+
+**What is the response variable, and what type is it (numerical/categorical)?**
+
+For both of the questions, the response variables are the scores from the five academic assessments. They are numerical variables.
+
+### Explanatory 
+
+**What is the explanatory variable, and what type is it (numerical/categorival)?**
+
+For Q1.1, the explanatory variable is September 1st cutoff. It is categorical variable.
+For Q1.2, the explanatory variable is parents' highest education level. I would take this variable as numerical variable. American education can be convert as following: a high school level of education is equivalent to 12 years'; an Associate's Degree is equivalent to 14 years', a B.S./B.A. is equivalent to 16 years', etc. a Master's Degree is equivalent to 17-18 years', and Master beyondis equivalent to >= 20 years'.
+
+### Relevant summary statistics 
+
+**Provide summary statistics relevant to your research question. For example, if you're comparing means across groups provide means, SDs, sample sizes of each group. This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
+
+
+```{r}
+
+# statistic for explanatory variables
+summary(earlychildhood5$G2_2_Sep1Cut)
+summary(earlychildhood6$G2_2_Sep1Cut)
+summary(earlychildhood7$G2_2_Sep1Cut)
+summary(earlychildhood8$G2_2_Sep1Cut)
+
+summary(earlychildhood9$PrtEDU)
+summary(earlychildhood10$PrtEDU)
+summary(earlychildhood11$PrtEDU)
+summary(earlychildhood12$PrtEDU)
+
+# statistic for response variable
+summary(earlychildhood2$K2_READ)
+summary(earlychildhood2$K2_Math)
+summary(earlychildhood2$K2_SCI)
+summary(earlychildhood2$K2_DCCSTOT)
+
+summary(earlychildhood1$K1_READ)
+summary(earlychildhood1$K1_Math)
+summary(earlychildhood1$K1_DCCSTOT)
+
+# example for summary of 1st semester reading score
+```
+
+
+```{r}
+# subest 2nd semester reading score and september 1st cutoff for statistic analysis
+k2read <- data.frame("CHILDID"=earlychildhood5$CHILDID,"K2_READ"=earlychildhood5$K2_READ,"G2_2_Sep1Cut_t"=earlychildhood5$G2_2_Sep1Cut_t)
+
+k2read <- k2read %>% mutate_if(is.factor, as.character)  
+
+# do the statistic on 2nd semester science score 
+stat <- k2read %>%  group_by(G2_2_Sep1Cut_t) %>% summarise (mean=mean(K2_READ,na.rm=T),sd(K2_READ,na.rm=T), median=median(K2_READ,na.rm=T), min=min(K2_READ,na.rm=T),max=max(K2_READ,na.rm=T))
+
+```
+
+```{r}
+ggplot(data=subset(k2read,!is.na(k2read$K2_READ)),aes(factor(G2_2_Sep1Cut_t),K2_READ))+
+  geom_boxplot()+
+  xlab("September 1st Cut Off for Kindergarten") + 
+  ylab("2011 Spring Kindergarten Reading Score")
+```
+
+
+```{r}
+# subest 6th semester reading score and parents eduction level for statistic analysis
+g2edu <- data.frame("CHILDID"=earlychildhood12$CHILDID,"G2_2_READ"=earlychildhood12$G2_2_READ,"PrtEDU"=earlychildhood12$PrtEDU)
+
+g2edu  %>% mutate_if(is.factor, as.character) -> g2edu 
+```
+
+```{r}
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_READ)),aes(factor(PrtEDU),G2_2_READ))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")
+
+```
