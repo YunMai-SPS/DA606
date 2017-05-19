@@ -1,5 +1,5 @@
 ---
-title: "DA606 final project"
+title: "DA606 Final Project: An Exploring into Early Childhood Education"
 author: "Yun Mai"
 date: "May 15, 2017"
 output:
@@ -31,18 +31,32 @@ library(DATA606)
 
 ### Part 1 - Introduction:
 
-Parent involvement in a child's education is consistently found to be positively associated with a child's academic performance. However, there has been little investigation of the mechanisms that explain this association. The present study examines two potential mechanisms of this association: the child's perception of cognitive competence and the quality of the student-teacher relationship. This study used a sample of 158 seven-year old participants, their mothers, and their teachers. Results indicated a statistically significant association between parent involvement and a child's academic performance, over and above the impact of the child's intelligence. A multiple mediation model indicated that the child's perception of cognitive competence fully mediated the relation between parent involvement and the child's performance on a standardized achievement test. The quality of the student-teacher relationship fully mediated the relation between parent involvement and teacher ratings of the child's classroom academic performance. Limitations, future research directions, and implications for public policy initiatives were discussed.
+A lot of studies have documented the importance of parent involvement for early childhood education. Parent involvement in a child's education is found to be positively associated with a child's academic performance and social functioning. The goal of this project is to find out whether there is statistically significant association between parent involvement and a child's academic performance from the data collected from Early Childhood Longitudinal Study (ECLS) program conducted by National Center for Educational Statistics (NCES) from 2010 through 2012. 
+
+Parent involvement will be categorized into three portions: 
+
+1.	parent involvement in preschool education 
+2.	parent involvement in school activities 
+3.	parent involvement in summer learning
 
 
 ## Research question 
 
-**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+Q1.1. Do parent involvement in preschool education influence child early academy outcomes? 
 
-Q1.1 Are the students from the schools who use the 5-year-old cutoff for Kindergarten entrance have better academic performance? 
-Q1.2 Does parents' education level have effects on children's academic performance in the early childhood?
+Taking the first set of explanatory variables, I will study contemporaneous association between parent involvement in school activities and reading achievement for second grade.
 
-Q2. Do parent involvement related to early literacy influence child early academy outcomes? 
+Q1.2. Do parent involvement in school activities influence child early academy outcomes?
 
+Taking the second set of explanatory variables, I will take the advantage of longitudinal follow-up data to investigate the associations between parent involvement in preschool and kindergarten and reading achievement in later grade.
+
+Q1.3. Do parent involvement in summer learning influence child early academy outcomes?
+
+Taking the third set of explanatory variables, I will study contemporaneous association between parent involvement in summer learning and reading achievement for second grade.
+
+Q2. Does school have a rule of that student enter kindergarten must turn 5 before September 1st have effects on children's academic performance in the early childhood?
+
+Q3. Does parents' education level have effects on children's academic performance in the early childhood?
 
 
 ### Part 2 - Data:
@@ -677,7 +691,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_Math,use = "complete.obs")
 ```
 
 ```
-The math score increases with the increase of reading score. There is a strong positive linear realtionship between the math sore and  the reading score.
+The math score increases with the increase of reading score. There is a strong (Pearson's r > 0.6) positive linear realtionship between the math sore and  the reading score.
 ```
 
 ```{r}
@@ -686,7 +700,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_SCI,use = "complete.obs")
 ```
 
 ```
-The science score increases with the increase of reading score. There is a moderate positive linear realtionship between the math sore and  the reading score.
+The science score increases with the increase of reading score. There is a strong (Pearson's r > 0.6) positive linear realtionship between the math sore and  the reading score.
 ```
 
 ```{r}
@@ -696,7 +710,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_DCCSSCR,use = "complete.obs")
 
 
 ```
-The DCCSSCR score slightly increases with the increase of reading score. There is a moderate positive linear realtionship between the math sore and  the reading score.
+The DCCSSCR score slightly increases with the increase of reading score. There is a weak (Pearson's r < 0.4) positive linear realtionship between the math sore and  the reading score.
 ```
 
 6.Is there difference between the academy performance between boys and girls?
@@ -974,8 +988,7 @@ Independent observation:Each student's parent's opinion on whether parent should
 
 ## Multiple linear regression
 
-The data set contains several variables on the parent involvement related to early literacy: children go to preschool before K (G2_2_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc).  First I look at the relationship between one of these variables and reading score.
-
+For the convenience of analysis, I extract the second grade academic outcomes and related variables.
 
 ```{r}
 # subset second grade and related vaviables
@@ -1003,50 +1016,247 @@ sub_g2read$Sumrd <- as.numeric(sub_g2read$Sumrd)
 sub_g2read$Sumreadtime <- as.numeric(sub_g2read$Sumreadtime)
 ```
 
+**Q1.1. Do parent involvement in preschool education influence child early academy outcomes?**
+
+Miedel and Reynolds (1999) detected positive associations between parent involvement in preschool and kindergarten and reading achievement in kindergarten and in eighth grade. I want to see whether parent involvement in child's preschool literacy education associates to second grade academic outcomes.
+
+The data set contains several variables on the parent involvement related to early literacy: children go to preschool before K (G2_2_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc).  
+
+**Q1.1.1.First look at the relationship between one of these variables and reading score.**
+
 ```{r}
 plot(sub_g2read$G2_2_READ ~ sub_g2read$G2_2_Prtpsk)
 cor(sub_g2read$G2_2_READ, sub_g2read$G2_2_Prtpsk,use = "complete.obs")
-paste("correlation coefficient between reading score and children go to preschool before K is",cor(sub_g2read$G2_2_READ, sub_g2read$G2_2_Prtpsk,use = "complete.obs"))
+```
 
+```
+There is very weak relationship between children go to preschool before K and reading score.
 ```
 
 ```{r}
 cor(sub_g2read$G2_2_READ, sub_g2read$Premath,use = "complete.obs")
-paste("correlation coefficient between reading score and preschool read/math good for school is ",cor(sub_g2read$G2_2_READ, sub_g2read$Premath,use = "complete.obs"))
-
 cor(sub_g2read$G2_2_READ, sub_g2read$Prelitr,use = "complete.obs")
-paste("correlation coefficient between reading score and have child know alphabet before K is",cor(sub_g2read$G2_2_READ, sub_g2read$Prelitr,use = "complete.obs"))
-
 cor(sub_g2read$G2_2_READ, sub_g2read$Prthw,use = "complete.obs")
-paste("correlation coefficient between reading score and parent provide homework time is",cor(sub_g2read$G2_2_READ, sub_g2read$Prthw,use = "complete.obs"))
-
 cor(sub_g2read$G2_2_READ, sub_g2read$Prerc,use = "complete.obs")
-paste("correlation coefficient between reading score and parent should read and count with child is",cor(sub_g2read$G2_2_READ, sub_g2read$Prerc,use = "complete.obs"))
-
-
-#children go to preschool before K (G2_2_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc)
 ```
 
 ```
-There are very weak relationship (positive or negative) between all varaibles on parent involvement related to early literacy. All relationships between all varaibles on parent involvement related to early literacy vcould be seen by using the following command: 
+There are very weak relationship (positive or negative) between all varaibles on parent involvement related to preschool literacy. All relationships between all varaibles on parent involvement related to early literacy could be seen by using the following command: 
 ```
 
 ```{r}
 g2read_prt <- c("G2_2_READ","G2_2_Prtpsk", "Premath"  ,"Prelitr" , "Prthw", "Prerc")
 sub_g2read_prt <- subset(sub_g2read,,g2read_prt)
-
 plot(sub_g2read_prt[,1:6])
 ```
 
+**Q1.1.2.Search for the best model**
+
+I will start with a full model that predicts reading score based on children go to preschool before K (G2_2_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), and parent should read and count with child(Prerc).
+
+```{r}
+sub_q1 <- sub_g2read[!is.na(sub_g2read$G2_2_Prtpsk),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Premath),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Prelitr),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$Prthw),]
+sub_q1 <- sub_q1[!is.na(sub_q1$Prerc),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ G2_2_Prtpsk + Premath + Prelitr + Prthw + Prerc, data = sub_q1)
+summary(m_full)
+```
+
+Using backward-selection and p-value as the selection criterion, determine the best model. Drop the variable with the highest p-value, which are PreLitr and Prerc, and re-fit the model. 
+```{r}
+m_backward <- lm(G2_2_READ ~ G2_2_Prtpsk + Premath + Prthw, data = sub_q1)
+summary(m_backward)
+```
+
+```
+After dropping PreLitr and Prerc, the coefficients and significance of the other variables were unchanged, suggesting that the dropped variable was not collinear with other variables.
+```
+
+linear model:
+$$\widehat{Score}_{reading} = 2.143248 +  0.140231\times G2_2_Prtpsk - 0.030383\times Premath - 0.040514\times Prthw $$
+**3.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**3.1 Normal probability plot.**
+```{r}
+qqnorm(m_backward$residuals)
+qqline(m_backward$residuals)
+```
+
+```
+The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+```
+**Q1.1.3.2 Absolute values of residuals against fitted values ($\hat{y_i}$).**
+```{r}
+fitted_backward <- 2.137331 + 0.139253* sub_q1$G2_2_Prtpsk -0.029061 * sub_q1$Premath - 0.040143 * sub_q1$Prthw
+
+plot(round(fitted_backward,1),m_backward$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+```
+The plot shows that the variance of the residuals is approximately constant.
+```
+Residuals in order of their data collection is not applicable in this data set because we second grade scores are collected at the same time.
+
+**Q1.1.3.3 Residuals against each predictor variable.**
+
+```{r}
+boxplot(m_backward$residuals~G2_2_Prtpsk,data=sub_q1,ylab="Residuals", main="G2_2_Prtpsk")
+plot(m_backward$residuals~Premath,data=sub_q1,ylab="Residuals", main="Premath")
+plot(m_backward$residuals~Prthw,data=sub_q1,ylab="Residuals", main="Prthw")
+```
 
 
+```
+The plot shows that the variance of the residuals is approximately constant except there are some deviations at low fitted values.
+```
+
+```    
+Based on the multiple linear model, the student who went to preschool before K and whose parent believe that preschool read/math is good for school and provide homework time to children will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.01714).
+```
+
+**Q1.2. Do parent involvement in school activities influence child early academy outcomes?**
+
+School encourage parent involvement by inviting parents to participate in activities at school such as school open house, general school meetingand, regularly scheduled parent teacher meetings, and parent volunteering in the classroom etc. and also encourage facilitating parent-teacher communication. In this project, I will study contemporaneous association between parent involvement in school activities and reading achievement.
+
+**Q1.2.1.Search for the best model**
+
+full model: predicts reading score based on parent volenteering at school(G2_2_Prthlp), parent attending school conference(G2_2_Prtconf), parent attending school open house(G2_2_Prtoph), and parent attending school art/music events(G2_2_Prtevt).
+
+```{r}
+sub_q1 <- sub_g2read[!is.na(sub_g2read$G2_2_Prthlp),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtconf),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtoph),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtevt),]
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ G2_2_Prthlp + G2_2_Prtconf + G2_2_Prtoph + G2_2_Prtevt, data = sub_q1)
+summary(m_full)
+```
+
+```
+All variables are significant and there is no need to do backward-selection.
+```
+
+linear model:
+$$\widehat{Score}_{reading} = 1.526989 + 0.082554\times G2_2_Prthlp + 0.051295\times G2_2_Prtconf + 0.031835\times G2_2_Prtoph + 0.042076\times G2_2_Prtevt$$
+
+**Q1.2.2.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**Q1.2.2.1 Normal probability plot.**
+```{r}
+qqnorm(m_full$residuals)
+qqline(m_full$residuals)
+```
+
+```
+The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+```
+
+**Q1.2.2.2 Absolute values of residuals against fitted values ($\hat{y_i}$).**
+```{r}
+fitted_full <- 1.526989 + 0.082554*sub_q1$G2_2_Prthlp + 0.051295*sub_q1$G2_2_Prtconf + 0.0318358 *sub_q1$G2_2_Prtoph + 0.042076*sub_q1$G2_2_Prtevt
+
+plot(round(fitted_full,1),m_full$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+**Q1.2.2.3 Residuals against each predictor variable.**
+
+```{r}
+plot(m_full$residuals~G2_2_Prthlp,data=sub_q1,ylab="Residuals", main="G2_2_Prthlp")
+plot(m_full$residuals~G2_2_Prtconf,data=sub_q1,ylab="Residuals", main="G2_2_Prtconf")
+plot(m_full$residuals~G2_2_Prtoph,data=sub_q1,ylab="Residuals", main="G2_2_Prtoph")
+plot(m_full$residuals~G2_2_Prtevt,data=sub_q1,ylab="Residuals", main="G2_2_Prtevt")
+```
 
 
+```
+The plots show that the variance of the residuals is approximately constant while there are some deviations at high (G2_2_Prthlp) and low (G2_2_Prtconf,G2_2_Prtoph) fitted values.
+```
 
+```    
+Based on the multiple linear model, the student whose parent actively volunteering at shcool, attending school conference, attending school open house, and attending school art/music events will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.06441).
+```
+
+**Q1.3. Do parent involvement in summer learning influence child early academy outcomes?**
+
+Schacter and Jo demonstrated that summer learning improve the achievement of economically disadvantaged first graders.
+
+**Q1.3.1.Search for the best model**
+
+full model: predicts reading score based on child attending summer school (Sumsch), summer school math (Summth), doing wrting activity with child in summer(Sumwrt), summer school reading (Sumrd), how long read to child in summer (Sumreadtime).
+
+```{r}
+sub_q1 <- sub_g2read[!is.na(sub_g2read$Sumsch),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Summth),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumwrt),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumrd),]
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumreadtime),]
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ Sumsch + Summth + Sumwrt + Sumrd +Sumreadtime, data = sub_q1)
+summary(m_full)
+```
+
+Using backward-selection and p-value as the selection criterion, determine the best model. Drop the variable with the highest p-value, which are Sumsch, Summth and Sumreadtime, and re-fit the model. 
+```{r}
+m_backward <- lm(G2_2_READ ~ Sumwrt + Sumrd, data = sub_q1)
+summary(m_backward)
+```
+
+```
+After dropping PreLitr and Prerc, the coefficients and significance of Sumrd was unchanged but Sumwrt became much smaller, suggesting that the dropped variable was collinear with Sumwrt.
+```
+
+linear model:
+$$\widehat{Score}_{reading} = 1.91269 -0.05484\times Sumwrt +0.13111\times Sumrd $$
+**Q1.3.3.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**Q1.3.3.1 Normal probability plot.**
+```{r}
+qqnorm(m_backward$residuals)
+qqline(m_backward$residuals)
+```
+
+```
+The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+```
+
+**Q1.3.3.2 Absolute values of residuals against fitted values ($\hat{y_i}$).**
+```{r}
+fitted_backward <- 1.91269 - 0.05484* sub_q1$Sumwrt + 0.13111* sub_q1$Sumrd
+
+plot(round(fitted_backward,1),m_backward$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+```
+The plot shows that the variance of the residuals is approximately constant.
+```
+
+**Q1.3.3.3 Residuals against each predictor variable.**
+
+```{r}
+plot(m_backward$residuals~Sumwrt,data=sub_q1,ylab="Residuals", main="Sumwrt")
+plot(m_backward$residuals~Sumrd,data=sub_q1,ylab="Residuals", main="Sumrd")
+```
+
+
+```
+The plot shows that the variance of the residuals is approximately constant.
+```
+
+```    
+Based on the multiple linear model, the student who do reading and writing activities will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.13111).
+```
+
+**Q2. Does school have a rule of that student enter kindergarten must turn 5 before September 1st have effects on children's academic performance in the early childhood?**
 
 
 ```{r}
-# In order to investigate the correlation between age and reading skill. the reading score data from first semester(K1), 2nd semester(K2), 4th semester(grade 1_2), 6th semester(grade2_2), and the data about September cutoff will be further cleaned. filter cases that don't have "NA".
+# In order to investigate the correlation between age and reading skill. the reading score data from first semester(K1), 2nd semester(K2), 4th semester(grade 1_2), 6th seester(grade2_2), and the data about September cutoff will be further cleaned. filter cases that don't have "NA".
 
 # remove rows with NA in reading score
 earlychildhood1 <- earlychildhood[!is.na(earlychildhood$K1_READ),]
@@ -1066,27 +1276,7 @@ earlychildhood10 <- filter(earlychildhood2, PrtEDU != "NA")
 earlychildhood11 <- filter(earlychildhood3, PrtEDU != "NA")
 earlychildhood12 <- filter(earlychildhood4, PrtEDU != "NA")
 
-length(earlychildhood5$G2_2_Sep1Cut)
-# 12992
-length(earlychildhood6$G2_2_Sep1Cut)
-# 13184
-length(earlychildhood7$G2_2_Sep1Cut)
-# 15007
-length(earlychildhood8$G2_2_Sep1Cut)
-# 16374
-length(earlychildhood10$PrtEDU)
-# 17215
-length(earlychildhood10$PrtEDU)
-# 17215
-length(earlychildhood11$PrtEDU)
-# 15132
-length(earlychildhood12$PrtEDU)
-# 13850
-
 ```
-
-
-
 
 ```{r}
 
@@ -1133,6 +1323,36 @@ ggplot(data=subset(k2read,!is.na(k2read$K2_READ)),aes(factor(G2_2_Sep1Cut_t),K2_
   ylab("2011 Spring Kindergarten Reading Score")
 ```
 
+```{r}
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_READ,Sep1cutyes$G2_2_READ)
+```
+
+```{r}
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_Math,Sep1cutyes$G2_2_Math)
+```
+
+
+```{r}
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_SCI,Sep1cutyes$G2_2_SCI)
+```
+
+```{r}
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_DCCSSCR,Sep1cutyes$G2_2_DCCSSCR)
+```
+
+```
+Comparing the academic outcomes of children from schools with September 1st cut off rule and from schools not having September 1st cut off rule, there is no difference in reading, math, science, and DCCSSCR score as p-value is > 0.05.  
+```
+
+**Q3. Does parents' education level have effects on children's academic performance in the early childhood?**
 
 ```{r}
 # subest 6th semester reading score and parents eduction level for statistic analysis
@@ -1149,19 +1369,96 @@ ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_READ)),aes(factor(PrtEDU),G2_2_READ))
 
 ```
 
+```{r}
+# subest 6th semester academic scores and parents eduction level for statistic analysis
+g2edu <- data.frame("CHILDID"=earlychildhood12$CHILDID,"G2_2_READ"=earlychildhood12$G2_2_READ, "G2_2_Math"=earlychildhood12$G2_2_Math, "G2_2_SCI"=earlychildhood12$G2_2_SCI,"G2_2_DCCSSCR"=earlychildhood12$G2_2_DCCSSCR,"PrtEDU"=earlychildhood12$PrtEDU)
 
+g2edu  %>% mutate_if(is.factor, as.character) -> g2edu 
+
+g2edu$PrtEDU <- str_replace_all(g2edu$PrtEDU,"2|3|4|5|6|7","above high school")
+g2edu$PrtEDU <- str_replace_all(g2edu$PrtEDU,"1","below high school")
+```
+
+```{r}
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_READ)),aes(factor(PrtEDU),G2_2_READ))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Reading")
+```
+
+
+```{r}
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_READ,PrtabvHisch$G2_2_READ)
+```
+
+```{r}
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_Math)),aes(factor(PrtEDU),G2_2_Math))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Math Score")+
+  labs(title = "Math")
+```
+
+```{r}
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtabvHisch$G2_2_Math,PrtblwHisch$G2_2_Math)
+```
+
+```{r}
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_SCI)),aes(factor(PrtEDU),G2_2_SCI))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Science")
+```
+
+```{r}
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_SCI,PrtabvHisch$G2_2_SCI)
+```
+
+```{r}
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_DCCSSCR)),aes(factor(PrtEDU),G2_2_DCCSSCR))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Dimentional Card Sort")
+```
+
+```{r}
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_DCCSSCR,PrtabvHisch$G2_2_DCCSSCR)
+```
+
+```
+There is significant difference in reading, math, and science scores between the students whose parents highest education level is below high school or beyond high school. However, it is very interesting to see that there is no significant difference in dimentional card sort  scores between these two categories. 
+```
 
 ### Part 5 - Conclusion: 
 
-Correlations between variables on parent involvement related to early literacy and the academy outcome are weak. So  variables on  parent involvement related to early literacy are not appropriate predictors to early childhoold academy outcomes.
+1.Correlations between parent involvement in preschool literacy, scholl activities, and summer learnings and the reading score are weak. So  variables on  parent involvement related to early literacy are not appropriate predictors to early childhoold academy outcomes(reading sscore). 
+
+2.Whether schools has September 1st cut off rule for kindergarten entry or not did not influence students academic outcomes.
+
+3.When looking at the influence of parents' highest education level on the academic outcomes, there was a clear difference in reading, math, and science scores between students whose parents finished high school and those whose parents did not finish high school. But the Dimentional Card Sort score of the students of these two caterogies are the same. As math and science both strongly and positively associates with reading score, reading, math, and science are more litercy-related. However, Dimentional Card Sort has weak correlation to reading score and it may largly reflects IQ. These observations suggested that parents' education level will have positive influence on literacy but not IQ. Literacy intervention in early childhood may improve the achievement of the students who are not performing well in reading, math and science but with no problem in sloving problems like Dimentional Card Sorting.
 
 
 ### References:
 
-
 1.Early Childhood Longitudinal Study (ECLS) program collected by the National Center for Educational Statistics(NCES)(http://nces.ed.gov//) 
 
-1.ECLS-K:2011 Kindergarten User's Manual, Public Version PDF File. (https://nces.ed.gov/ecls/dataproducts.asp)
+2.ECLS-K:2011 Kindergarten User's Manual, Public Version PDF File. (https://nces.ed.gov/ecls/dataproducts.asp)
 
-2.ECLS-K:2011 Kindergarten-Second Grade User's Manual, Public Version PDF File.(https://nces.ed.gov/ecls/dataproducts.asp)
+3.ECLS-K:2011 Kindergarten-Second Grade User's Manual, Public Version PDF File.(https://nces.ed.gov/ecls/dataproducts.asp)
+
+4.	Miedel WT, Reynolds AJ. Parent involvement in early intervention for disadvantaged children: Does it matter? Journal of School Psychology. 1999 ; 37: p379-402.
+
+5.	John Schacter and Booli Jo,  Learning when school is not in session; a reading summer day-camp intervention to improve the achievement of exiting First-Grade students who are economically disadvantaged. Journal of Research in Reading. 2005; 28(2), p158-169.
+
 

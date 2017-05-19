@@ -1,4 +1,4 @@
-DA606 final project
+DA606 Final Project: An Exploring into Early Childhood Education
 ================
 Yun Mai
 May 15, 2017
@@ -72,16 +72,32 @@ library(DATA606)
 
 ### Part 1 - Introduction:
 
-Parent involvement in a child's education is consistently found to be positively associated with a child's academic performance. However, there has been little investigation of the mechanisms that explain this association. The present study examines two potential mechanisms of this association: the child's perception of cognitive competence and the quality of the student-teacher relationship. This study used a sample of 158 seven-year old participants, their mothers, and their teachers. Results indicated a statistically significant association between parent involvement and a child's academic performance, over and above the impact of the child's intelligence. A multiple mediation model indicated that the child's perception of cognitive competence fully mediated the relation between parent involvement and the child's performance on a standardized achievement test. The quality of the student-teacher relationship fully mediated the relation between parent involvement and teacher ratings of the child's classroom academic performance. Limitations, future research directions, and implications for public policy initiatives were discussed.
+A lot of studies have documented the importance of parent involvement for early childhood education. Parent involvement in a child's education is found to be positively associated with a child's academic performance and social functioning. The goal of this project is to find out whether there is statistically significant association between parent involvement and a child's academic performance from the data collected from Early Childhood Longitudinal Study (ECLS) program conducted by National Center for Educational Statistics (NCES) from 2010 through 2012.
+
+Parent involvement will be categorized into three portions:
+
+1.  parent involvement in preschool education
+2.  parent involvement in school activities
+3.  parent involvement in summer learning
 
 Research question
 -----------------
 
-**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+Q1.1. Do parent involvement in preschool education influence child early academy outcomes?
 
-Q1.1 Are the students from the schools who use the 5-year-old cutoff for Kindergarten entrance have better academic performance? Q1.2 Does parents' education level have effects on children's academic performance in the early childhood?
+Taking the first set of explanatory variables, I will study contemporaneous association between parent involvement in school activities and reading achievement for second grade.
 
-Q2. Do parent involvement related to early literacy influence child early academy outcomes?
+Q1.2. Do parent involvement in school activities influence child early academy outcomes?
+
+Taking the second set of explanatory variables, I will take the advantage of longitudinal follow-up data to investigate the associations between parent involvement in preschool and kindergarten and reading achievement in later grade.
+
+Q1.3. Do parent involvement in summer learning influence child early academy outcomes?
+
+Taking the third set of explanatory variables, I will study contemporaneous association between parent involvement in summer learning and reading achievement for second grade.
+
+Q2. Does school have a rule of that student enter kindergarten must turn 5 before September 1st have effects on children's academic performance in the early childhood?
+
+Q3. Does parents' education level have effects on children's academic performance in the early childhood?
 
 ### Part 2 - Data:
 
@@ -939,7 +955,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_Math,use = "complete.obs")
 
     ## [1] 0.7328452
 
-    The math score increases with the increase of reading score. There is a strong positive linear realtionship between the math sore and  the reading score.
+    The math score increases with the increase of reading score. There is a strong (Pearson's r > 0.6) positive linear realtionship between the math sore and  the reading score.
 
 ``` r
 plot(earlychildhood$G2_2_READ,earlychildhood$G2_2_SCI)
@@ -953,7 +969,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_SCI,use = "complete.obs")
 
     ## [1] 0.6957673
 
-    The science score increases with the increase of reading score. There is a moderate positive linear realtionship between the math sore and  the reading score.
+    The science score increases with the increase of reading score. There is a strong (Pearson's r > 0.6) positive linear realtionship between the math sore and  the reading score.
 
 ``` r
 plot(earlychildhood$G2_2_READ,earlychildhood$G2_2_DCCSSCR)
@@ -967,7 +983,7 @@ cor(earlychildhood$G2_2_READ,earlychildhood$G2_2_DCCSSCR,use = "complete.obs")
 
     ## [1] 0.3928881
 
-    The DCCSSCR score slightly increases with the increase of reading score. There is a moderate positive linear realtionship between the math sore and  the reading score.
+    The DCCSSCR score slightly increases with the increase of reading score. There is a weak (Pearson's r < 0.4) positive linear realtionship between the math sore and  the reading score.
 
 6.Is there difference between the academy performance between boys and girls?
 
@@ -1450,7 +1466,7 @@ abline(0, 0)
 Multiple linear regression
 --------------------------
 
-The data set contains several variables on the parent involvement related to early literacy: children go to preschool before K (G2\_2\_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc). First I look at the relationship between one of these variables and reading score.
+For the convenience of analysis, I extract the second grade academic outcomes and related variables.
 
 ``` r
 # subset second grade and related vaviables
@@ -1555,6 +1571,14 @@ sub_g2read$Sumreadtime <- as.numeric(sub_g2read$Sumreadtime)
 
     ## Warning: NAs introduced by coercion
 
+**Q1.1. Do parent involvement in preschool education influence child early academy outcomes?**
+
+Miedel and Reynolds (1999) detected positive associations between parent involvement in preschool and kindergarten and reading achievement in kindergarten and in eighth grade. I want to see whether parent involvement in child's preschool literacy education associates to second grade academic outcomes.
+
+The data set contains several variables on the parent involvement related to early literacy: children go to preschool before K (G2\_2\_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc).
+
+**Q1.1.1.First look at the relationship between one of these variables and reading score.**
+
 ``` r
 plot(sub_g2read$G2_2_READ ~ sub_g2read$G2_2_Prtpsk)
 ```
@@ -1567,11 +1591,7 @@ cor(sub_g2read$G2_2_READ, sub_g2read$G2_2_Prtpsk,use = "complete.obs")
 
     ## [1] 0.09137424
 
-``` r
-paste("correlation coefficient between reading score and children go to preschool before K is",cor(sub_g2read$G2_2_READ, sub_g2read$G2_2_Prtpsk,use = "complete.obs"))
-```
-
-    ## [1] "correlation coefficient between reading score and children go to preschool before K is 0.0913742398118231"
+    There is very weak relationship between children go to preschool before K and reading score.
 
 ``` r
 cor(sub_g2read$G2_2_READ, sub_g2read$Premath,use = "complete.obs")
@@ -1580,22 +1600,10 @@ cor(sub_g2read$G2_2_READ, sub_g2read$Premath,use = "complete.obs")
     ## [1] -0.09509362
 
 ``` r
-paste("correlation coefficient between reading score and preschool read/math good for school is ",cor(sub_g2read$G2_2_READ, sub_g2read$Premath,use = "complete.obs"))
-```
-
-    ## [1] "correlation coefficient between reading score and preschool read/math good for school is  -0.0950936219959607"
-
-``` r
 cor(sub_g2read$G2_2_READ, sub_g2read$Prelitr,use = "complete.obs")
 ```
 
     ## [1] -0.04224958
-
-``` r
-paste("correlation coefficient between reading score and have child know alphabet before K is",cor(sub_g2read$G2_2_READ, sub_g2read$Prelitr,use = "complete.obs"))
-```
-
-    ## [1] "correlation coefficient between reading score and have child know alphabet before K is -0.0422495809120609"
 
 ``` r
 cor(sub_g2read$G2_2_READ, sub_g2read$Prthw,use = "complete.obs")
@@ -1604,40 +1612,366 @@ cor(sub_g2read$G2_2_READ, sub_g2read$Prthw,use = "complete.obs")
     ## [1] -0.1001445
 
 ``` r
-paste("correlation coefficient between reading score and parent provide homework time is",cor(sub_g2read$G2_2_READ, sub_g2read$Prthw,use = "complete.obs"))
-```
-
-    ## [1] "correlation coefficient between reading score and parent provide homework time is -0.100144505480871"
-
-``` r
 cor(sub_g2read$G2_2_READ, sub_g2read$Prerc,use = "complete.obs")
 ```
 
     ## [1] 0.003368523
 
-``` r
-paste("correlation coefficient between reading score and parent should read and count with child is",cor(sub_g2read$G2_2_READ, sub_g2read$Prerc,use = "complete.obs"))
-```
-
-    ## [1] "correlation coefficient between reading score and parent should read and count with child is 0.0033685226198468"
-
-``` r
-#children go to preschool before K (G2_2_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), parent should read and count with child(Prerc)
-```
-
-    There are very weak relationship (positive or negative) between all varaibles on parent involvement related to early literacy. All relationships between all varaibles on parent involvement related to early literacy vcould be seen by using the following command: 
+    There are very weak relationship (positive or negative) between all varaibles on parent involvement related to preschool literacy. All relationships between all varaibles on parent involvement related to early literacy could be seen by using the following command: 
 
 ``` r
 g2read_prt <- c("G2_2_READ","G2_2_Prtpsk", "Premath"  ,"Prelitr" , "Prthw", "Prerc")
 sub_g2read_prt <- subset(sub_g2read,,g2read_prt)
-
 plot(sub_g2read_prt[,1:6])
 ```
 
 ![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-49-1.png)
 
+**Q1.1.2.Search for the best model**
+
+I will start with a full model that predicts reading score based on children go to preschool before K (G2\_2\_Prtpsk), preschool read/math good for school (Premath), have child know alphabet before K (Prelitr), parent provide homework time (Prthw), and parent should read and count with child(Prerc).
+
 ``` r
-# In order to investigate the correlation between age and reading skill. the reading score data from first semester(K1), 2nd semester(K2), 4th semester(grade 1_2), 6th semester(grade2_2), and the data about September cutoff will be further cleaned. filter cases that don't have "NA".
+sub_q1 <- sub_g2read[!is.na(sub_g2read$G2_2_Prtpsk),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Premath),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Prelitr),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$Prthw),]
+sub_q1 <- sub_q1[!is.na(sub_q1$Prerc),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ G2_2_Prtpsk + Premath + Prelitr + Prthw + Prerc, data = sub_q1)
+summary(m_full)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = G2_2_READ ~ G2_2_Prtpsk + Premath + Prelitr + Prthw + 
+    ##     Prerc, data = sub_q1)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.35048 -0.35064  0.04447  0.40997  1.78065 
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  2.018191   0.101270  19.929  < 2e-16 ***
+    ## G2_2_Prtpsk  0.137998   0.019098   7.226 5.54e-13 ***
+    ## Premath     -0.031712   0.009440  -3.359 0.000786 ***
+    ## Prelitr      0.002319   0.009812   0.236 0.813161    
+    ## Prthw       -0.043327   0.009802  -4.420 1.00e-05 ***
+    ## Prerc        0.028466   0.019591   1.453 0.146272    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.6277 on 6639 degrees of freedom
+    ## Multiple R-squared:  0.01746,    Adjusted R-squared:  0.01672 
+    ## F-statistic:  23.6 on 5 and 6639 DF,  p-value: < 2.2e-16
+
+Using backward-selection and p-value as the selection criterion, determine the best model. Drop the variable with the highest p-value, which are PreLitr and Prerc, and re-fit the model.
+
+``` r
+m_backward <- lm(G2_2_READ ~ G2_2_Prtpsk + Premath + Prthw, data = sub_q1)
+summary(m_backward)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = G2_2_READ ~ G2_2_Prtpsk + Premath + Prthw, data = sub_q1)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.35153 -0.35053  0.04417  0.41251  1.78889 
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  2.143248   0.055338  38.730  < 2e-16 ***
+    ## G2_2_Prtpsk  0.140231   0.019032   7.368 1.94e-13 ***
+    ## Premath     -0.030383   0.008587  -3.538 0.000405 ***
+    ## Prthw       -0.040514   0.009435  -4.294 1.78e-05 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.6277 on 6641 degrees of freedom
+    ## Multiple R-squared:  0.01714,    Adjusted R-squared:  0.01669 
+    ## F-statistic:  38.6 on 3 and 6641 DF,  p-value: < 2.2e-16
+
+    After dropping PreLitr and Prerc, the coefficients and significance of the other variables were unchanged, suggesting that the dropped variable was not collinear with other variables.
+
+linear model:
+$$\\widehat{Score}\_{reading} = 2.143248 +  0.140231\\times G2\_2\_Prtpsk - 0.030383\\times Premath - 0.040514\\times Prthw $$
+ **3.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**3.1 Normal probability plot.**
+
+``` r
+qqnorm(m_backward$residuals)
+qqline(m_backward$residuals)
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-52-1.png)
+
+    The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+
+**Q1.1.3.2 Absolute values of residuals against fitted values ($\\hat{y\_i}$).**
+
+``` r
+fitted_backward <- 2.137331 + 0.139253* sub_q1$G2_2_Prtpsk -0.029061 * sub_q1$Premath - 0.040143 * sub_q1$Prthw
+
+plot(round(fitted_backward,1),m_backward$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-53-1.png)
+
+    The plot shows that the variance of the residuals is approximately constant.
+
+Residuals in order of their data collection is not applicable in this data set because we second grade scores are collected at the same time.
+
+**Q1.1.3.3 Residuals against each predictor variable.**
+
+``` r
+boxplot(m_backward$residuals~G2_2_Prtpsk,data=sub_q1,ylab="Residuals", main="G2_2_Prtpsk")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-54-1.png)
+
+``` r
+plot(m_backward$residuals~Premath,data=sub_q1,ylab="Residuals", main="Premath")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-54-2.png)
+
+``` r
+plot(m_backward$residuals~Prthw,data=sub_q1,ylab="Residuals", main="Prthw")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-54-3.png)
+
+    The plot shows that the variance of the residuals is approximately constant except there are some deviations at low fitted values.
+
+    Based on the multiple linear model, the student who went to preschool before K and whose parent believe that preschool read/math is good for school and provide homework time to children will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.01714).
+
+**Q1.2. Do parent involvement in school activities influence child early academy outcomes?**
+
+School encourage parent involvement by inviting parents to participate in activities at school such as school open house, general school meetingand, regularly scheduled parent teacher meetings, and parent volunteering in the classroom etc. and also encourage facilitating parent-teacher communication. In this project, I will study contemporaneous association between parent involvement in school activities and reading achievement.
+
+**Q1.2.1.Search for the best model**
+
+full model: predicts reading score based on parent volenteering at school(G2\_2\_Prthlp), parent attending school conference(G2\_2\_Prtconf), parent attending school open house(G2\_2\_Prtoph), and parent attending school art/music events(G2\_2\_Prtevt).
+
+``` r
+sub_q1 <- sub_g2read[!is.na(sub_g2read$G2_2_Prthlp),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtconf),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtoph),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_Prtevt),]
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ G2_2_Prthlp + G2_2_Prtconf + G2_2_Prtoph + G2_2_Prtevt, data = sub_q1)
+summary(m_full)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = G2_2_READ ~ G2_2_Prthlp + G2_2_Prtconf + G2_2_Prtoph + 
+    ##     G2_2_Prtevt, data = sub_q1)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.51444 -0.35236  0.03851  0.41254  1.72053 
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  1.526989   0.028077  54.386  < 2e-16 ***
+    ## G2_2_Prthlp  0.082554   0.006725  12.276  < 2e-16 ***
+    ## G2_2_Prtconf 0.051295   0.006656   7.706 1.40e-14 ***
+    ## G2_2_Prtoph  0.031835   0.006369   4.998 5.87e-07 ***
+    ## G2_2_Prtevt  0.042076   0.005493   7.660 2.00e-14 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.6171 on 12103 degrees of freedom
+    ## Multiple R-squared:  0.06441,    Adjusted R-squared:  0.0641 
+    ## F-statistic: 208.3 on 4 and 12103 DF,  p-value: < 2.2e-16
+
+    All variables are significant and there is no need to do backward-selection.
+
+linear model:
+$$\\widehat{Score}\_{reading} = 1.526989 + 0.082554\\times G2\_2\_Prthlp + 0.051295\\times G2\_2\_Prtconf + 0.031835\\times G2\_2\_Prtoph + 0.042076\\times G2\_2\_Prtevt$$
+
+**Q1.2.2.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**Q1.2.2.1 Normal probability plot.**
+
+``` r
+qqnorm(m_full$residuals)
+qqline(m_full$residuals)
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-56-1.png)
+
+    The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+
+**Q1.2.2.2 Absolute values of residuals against fitted values ($\\hat{y\_i}$).**
+
+``` r
+fitted_full <- 1.526989 + 0.082554*sub_q1$G2_2_Prthlp + 0.051295*sub_q1$G2_2_Prtconf + 0.0318358 *sub_q1$G2_2_Prtoph + 0.042076*sub_q1$G2_2_Prtevt
+
+plot(round(fitted_full,1),m_full$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-57-1.png)
+
+**Q1.2.2.3 Residuals against each predictor variable.**
+
+``` r
+plot(m_full$residuals~G2_2_Prthlp,data=sub_q1,ylab="Residuals", main="G2_2_Prthlp")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-58-1.png)
+
+``` r
+plot(m_full$residuals~G2_2_Prtconf,data=sub_q1,ylab="Residuals", main="G2_2_Prtconf")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-58-2.png)
+
+``` r
+plot(m_full$residuals~G2_2_Prtoph,data=sub_q1,ylab="Residuals", main="G2_2_Prtoph")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-58-3.png)
+
+``` r
+plot(m_full$residuals~G2_2_Prtevt,data=sub_q1,ylab="Residuals", main="G2_2_Prtevt")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-58-4.png)
+
+    The plots show that the variance of the residuals is approximately constant while there are some deviations at high (G2_2_Prthlp) and low (G2_2_Prtconf,G2_2_Prtoph) fitted values.
+
+    Based on the multiple linear model, the student whose parent actively volunteering at shcool, attending school conference, attending school open house, and attending school art/music events will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.06441).
+
+**Q1.3. Do parent involvement in summer learning influence child early academy outcomes?**
+
+Schacter and Jo demonstrated that summer learning improve the achievement of economically disadvantaged first graders.
+
+**Q1.3.1.Search for the best model**
+
+full model: predicts reading score based on child attending summer school (Sumsch), summer school math (Summth), doing wrting activity with child in summer(Sumwrt), summer school reading (Sumrd), how long read to child in summer (Sumreadtime).
+
+``` r
+sub_q1 <- sub_g2read[!is.na(sub_g2read$Sumsch),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Summth),]  
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumwrt),] 
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumrd),]
+sub_q1 <- sub_q1[!is.na(sub_q1$Sumreadtime),]
+sub_q1 <- sub_q1[!is.na(sub_q1$G2_2_READ),]
+
+m_full <- lm(G2_2_READ ~ Sumsch + Summth + Sumwrt + Sumrd +Sumreadtime, data = sub_q1)
+summary(m_full)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = G2_2_READ ~ Sumsch + Summth + Sumwrt + Sumrd + Sumreadtime, 
+    ##     data = sub_q1)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.25695 -0.36256  0.03253  0.42795  1.63264 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  1.97223    0.14247  13.843  < 2e-16 ***
+    ## Sumsch      -0.01305    0.02718  -0.480  0.63123    
+    ## Summth      -0.02394    0.01583  -1.512  0.13061    
+    ## Sumwrt      -0.04695    0.01483  -3.166  0.00156 ** 
+    ## Sumrd        0.13134    0.01485   8.846  < 2e-16 ***
+    ## Sumreadtime  0.02392    0.01444   1.657  0.09767 .  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.6468 on 3554 degrees of freedom
+    ## Multiple R-squared:  0.024,  Adjusted R-squared:  0.02262 
+    ## F-statistic: 17.48 on 5 and 3554 DF,  p-value: < 2.2e-16
+
+Using backward-selection and p-value as the selection criterion, determine the best model. Drop the variable with the highest p-value, which are Sumsch, Summth and Sumreadtime, and re-fit the model.
+
+``` r
+m_backward <- lm(G2_2_READ ~ Sumwrt + Sumrd, data = sub_q1)
+summary(m_backward)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = G2_2_READ ~ Sumwrt + Sumrd, data = sub_q1)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -2.26199 -0.35991  0.03373  0.42663  1.63298 
+    ## 
+    ## Coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  1.91269    0.05125  37.324  < 2e-16 ***
+    ## Sumwrt      -0.05484    0.01325  -4.140 3.55e-05 ***
+    ## Sumrd        0.13111    0.01466   8.941  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.6469 on 3557 degrees of freedom
+    ## Multiple R-squared:  0.02267,    Adjusted R-squared:  0.02212 
+    ## F-statistic: 41.26 on 2 and 3557 DF,  p-value: < 2.2e-16
+
+    After dropping PreLitr and Prerc, the coefficients and significance of Sumrd was unchanged but Sumwrt became much smaller, suggesting that the dropped variable was collinear with Sumwrt.
+
+linear model:
+$$\\widehat{Score}\_{reading} = 1.91269 -0.05484\\times Sumwrt +0.13111\\times Sumrd $$
+ **Q1.3.3.Verify that the conditions for this model are reasonable using diagnostic plots.**
+
+**Q1.3.3.1 Normal probability plot.**
+
+``` r
+qqnorm(m_backward$residuals)
+qqline(m_backward$residuals)
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-61-1.png)
+
+    The residuals of the model are nearly normal as shown in the QQ plot. While there are a few observations that deviate noticeably from the line, they are not particularly extreme.
+
+**Q1.3.3.2 Absolute values of residuals against fitted values ($\\hat{y\_i}$).**
+
+``` r
+fitted_backward <- 1.91269 - 0.05484* sub_q1$Sumwrt + 0.13111* sub_q1$Sumrd
+
+plot(round(fitted_backward,1),m_backward$residuals,ylab="Absolute value of residuals", xlab="Fitted values")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-62-1.png)
+
+    The plot shows that the variance of the residuals is approximately constant.
+
+**Q1.3.3.3 Residuals against each predictor variable.**
+
+``` r
+plot(m_backward$residuals~Sumwrt,data=sub_q1,ylab="Residuals", main="Sumwrt")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-63-1.png)
+
+``` r
+plot(m_backward$residuals~Sumrd,data=sub_q1,ylab="Residuals", main="Sumrd")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-63-2.png)
+
+    The plot shows that the variance of the residuals is approximately constant.
+
+    Based on the multiple linear model, the student who do reading and writing activities will have higher reading score. But overall the correlation is weak (Multiple R-squared:  0.13111).
+
+**Q2. Does school have a rule of that student enter kindergarten must turn 5 before September 1st have effects on children's academic performance in the early childhood?**
+
+``` r
+# In order to investigate the correlation between age and reading skill. the reading score data from first semester(K1), 2nd semester(K2), 4th semester(grade 1_2), 6th seester(grade2_2), and the data about September cutoff will be further cleaned. filter cases that don't have "NA".
 
 # remove rows with NA in reading score
 earlychildhood1 <- earlychildhood[!is.na(earlychildhood$K1_READ),]
@@ -1656,63 +1990,6 @@ earlychildhood9 <- filter(earlychildhood1, PrtEDU != "NA")
 earlychildhood10 <- filter(earlychildhood2, PrtEDU != "NA")
 earlychildhood11 <- filter(earlychildhood3, PrtEDU != "NA")
 earlychildhood12 <- filter(earlychildhood4, PrtEDU != "NA")
-
-length(earlychildhood5$G2_2_Sep1Cut)
-```
-
-    ## [1] 11196
-
-``` r
-# 12992
-length(earlychildhood6$G2_2_Sep1Cut)
-```
-
-    ## [1] 12465
-
-``` r
-# 13184
-length(earlychildhood7$G2_2_Sep1Cut)
-```
-
-    ## [1] 12480
-
-``` r
-# 15007
-length(earlychildhood8$G2_2_Sep1Cut)
-```
-
-    ## [1] 12456
-
-``` r
-# 16374
-length(earlychildhood10$PrtEDU)
-```
-
-    ## [1] 14389
-
-``` r
-# 17215
-length(earlychildhood10$PrtEDU)
-```
-
-    ## [1] 14389
-
-``` r
-# 17215
-length(earlychildhood11$PrtEDU)
-```
-
-    ## [1] 12580
-
-``` r
-# 15132
-length(earlychildhood12$PrtEDU)
-```
-
-    ## [1] 11529
-
-``` r
-# 13850
 ```
 
 ``` r
@@ -1843,7 +2120,83 @@ ggplot(data=subset(k2read,!is.na(k2read$K2_READ)),aes(factor(G2_2_Sep1Cut_t),K2_
   ylab("2011 Spring Kindergarten Reading Score")
 ```
 
-![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-53-1.png)
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-67-1.png)
+
+``` r
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_READ,Sep1cutyes$G2_2_READ)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  Sep1cutyes$G2_2_READ and Sep1cutyes$G2_2_READ
+    ## t = 0, df = 15414, p-value = 1
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.02029484  0.02029484
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  2.168926  2.168926
+
+``` r
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_Math,Sep1cutyes$G2_2_Math)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  Sep1cutyes$G2_2_Math and Sep1cutyes$G2_2_Math
+    ## t = 0, df = 15408, p-value = 1
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.02602507  0.02602507
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  2.425733  2.425733
+
+``` r
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_SCI,Sep1cutyes$G2_2_SCI)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  Sep1cutyes$G2_2_SCI and Sep1cutyes$G2_2_SCI
+    ## t = 0, df = 15400, p-value = 1
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.03009313  0.03009313
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  1.569671  1.569671
+
+``` r
+Sep1cutyes <- earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == "yes"),]
+Sep1cutno <-  earlychildhood[which(earlychildhood$G2_2_Sep1Cut_t == 'no'),]
+t.test(Sep1cutyes$G2_2_DCCSSCR,Sep1cutyes$G2_2_DCCSSCR)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  Sep1cutyes$G2_2_DCCSSCR and Sep1cutyes$G2_2_DCCSSCR
+    ## t = 0, df = 15342, p-value = 1
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.04300482  0.04300482
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  6.666743  6.666743
+
+    Comparing the academic outcomes of children from schools with September 1st cut off rule and from schools not having September 1st cut off rule, there is no difference in reading, math, science, and DCCSSCR score as p-value is > 0.05.  
+
+**Q3. Does parents' education level have effects on children's academic performance in the early childhood?**
 
 ``` r
 # subest 6th semester reading score and parents eduction level for statistic analysis
@@ -1859,16 +2212,148 @@ ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_READ)),aes(factor(PrtEDU),G2_2_READ))
   ylab("2013 Spring 2nd Grade Reading Score")
 ```
 
-![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-55-1.png)
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-73-1.png)
+
+``` r
+# subest 6th semester academic scores and parents eduction level for statistic analysis
+g2edu <- data.frame("CHILDID"=earlychildhood12$CHILDID,"G2_2_READ"=earlychildhood12$G2_2_READ, "G2_2_Math"=earlychildhood12$G2_2_Math, "G2_2_SCI"=earlychildhood12$G2_2_SCI,"G2_2_DCCSSCR"=earlychildhood12$G2_2_DCCSSCR,"PrtEDU"=earlychildhood12$PrtEDU)
+
+g2edu  %>% mutate_if(is.factor, as.character) -> g2edu 
+
+g2edu$PrtEDU <- str_replace_all(g2edu$PrtEDU,"2|3|4|5|6|7","above high school")
+g2edu$PrtEDU <- str_replace_all(g2edu$PrtEDU,"1","below high school")
+```
+
+``` r
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_READ)),aes(factor(PrtEDU),G2_2_READ))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Reading")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-75-1.png)
+
+``` r
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_READ,PrtabvHisch$G2_2_READ)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  PrtblwHisch$G2_2_READ and PrtabvHisch$G2_2_READ
+    ## t = -6.8754, df = 1063.7, p-value = 1.052e-11
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.1972397 -0.1096544
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  2.052743  2.206190
+
+``` r
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_Math)),aes(factor(PrtEDU),G2_2_Math))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Math Score")+
+  labs(title = "Math")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-77-1.png)
+
+``` r
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtabvHisch$G2_2_Math,PrtblwHisch$G2_2_Math)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  PrtabvHisch$G2_2_Math and PrtblwHisch$G2_2_Math
+    ## t = 5.4003, df = 1076.1, p-value = 8.184e-08
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  0.0950871 0.2036204
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  2.464817  2.315463
+
+``` r
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_SCI)),aes(factor(PrtEDU),G2_2_SCI))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Science")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-79-1.png)
+
+``` r
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_SCI,PrtabvHisch$G2_2_SCI)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  PrtblwHisch$G2_2_SCI and PrtabvHisch$G2_2_SCI
+    ## t = -8.8582, df = 1029, p-value < 2.2e-16
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.3900706 -0.2485934
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  1.304297  1.623629
+
+``` r
+ggplot(data=subset(g2edu,!is.na(g2edu$G2_2_DCCSSCR)),aes(factor(PrtEDU),G2_2_DCCSSCR))+
+  geom_boxplot(aes(fill=factor(PrtEDU)))+
+  xlab("Parent Education Level")+
+  ylab("2013 Spring 2nd Grade Reading Score")+
+  labs(title = "Dimentional Card Sort")
+```
+
+![](DATA606_final_project_files/figure-markdown_github/unnamed-chunk-81-1.png)
+
+``` r
+PrtblwHisch <- g2edu[which(g2edu$PrtEDU == "below high school"),]
+PrtabvHisch <-  g2edu[which(g2edu$PrtEDU == 'above high school'),]
+t.test(PrtblwHisch$G2_2_DCCSSCR,PrtabvHisch$G2_2_DCCSSCR)
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  PrtblwHisch$G2_2_DCCSSCR and PrtabvHisch$G2_2_DCCSSCR
+    ## t = -1.5261, df = 1063.5, p-value = 0.1273
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -0.16343219  0.02043077
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  6.638675  6.710176
+
+    There is significant difference in reading, math, and science scores between the students whose parents highest education level is below high school or beyond high school. However, it is very interesting to see that there is no significant difference in dimentional card sort  scores between these two categories. 
 
 ### Part 5 - Conclusion:
 
-Correlations between variables on parent involvement related to early literacy and the academy outcome are weak. So variables on parent involvement related to early literacy are not appropriate predictors to early childhoold academy outcomes.
+1.Correlations between parent involvement in preschool literacy, scholl activities, and summer learnings and the reading score are weak. So variables on parent involvement related to early literacy are not appropriate predictors to early childhoold academy outcomes(reading sscore).
+
+2.Whether schools has September 1st cut off rule for kindergarten entry or not did not influence students academic outcomes.
+
+3.When looking at the influence of parents' highest education level on the academic outcomes, there was a clear difference in reading, math, and science scores between students whose parents finished high school and those whose parents did not finish high school. But the Dimentional Card Sort score of the students of these two caterogies are the same. As math and science both strongly and positively associates with reading score, reading, math, and science are more litercy-related. However, Dimentional Card Sort has weak correlation to reading score and it may largly reflects IQ. These observations suggested that parents' education level will have positive influence on literacy but not IQ. Literacy intervention in early childhood may improve the achievement of the students who are not performing well in reading, math and science but with no problem in sloving problems like Dimentional Card Sorting.
 
 ### References:
 
 1.Early Childhood Longitudinal Study (ECLS) program collected by the National Center for Educational Statistics(NCES)(<http://nces.ed.gov//>)
 
-1.ECLS-K:2011 Kindergarten User's Manual, Public Version PDF File. (<https://nces.ed.gov/ecls/dataproducts.asp>)
+2.ECLS-K:2011 Kindergarten User's Manual, Public Version PDF File. (<https://nces.ed.gov/ecls/dataproducts.asp>)
 
-2.ECLS-K:2011 Kindergarten-Second Grade User's Manual, Public Version PDF File.(<https://nces.ed.gov/ecls/dataproducts.asp>)
+3.ECLS-K:2011 Kindergarten-Second Grade User's Manual, Public Version PDF File.(<https://nces.ed.gov/ecls/dataproducts.asp>)
+
+1.  Miedel WT, Reynolds AJ. Parent involvement in early intervention for disadvantaged children: Does it matter? Journal of School Psychology. 1999 ; 37: p379-402.
+
+2.  John Schacter and Booli Jo, Learning when school is not in session; a reading summer day-camp intervention to improve the achievement of exiting First-Grade students who are economically disadvantaged. Journal of Research in Reading. 2005; 28(2), p158-169.
