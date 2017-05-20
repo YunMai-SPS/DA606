@@ -117,7 +117,9 @@ Answer: c
 
 1.  Figure A below represents the distribution of an observed variable. Figure B below represents the distribution of the mean from 500 random samples of size 30 from A. The mean of A is 5.05 and the mean of B is 5.04. The standard deviations of A and B are 3.22 and 0.58, respectively.
 
-!(<https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7a.png>) !(<https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7b.png>)
+!(<https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7a.png>)
+
+!(<https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7b.png>)
 
 1.  Describe the two distributions (2 pts).
 
