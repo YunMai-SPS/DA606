@@ -1,0 +1,384 @@
+---
+title: "DATA606_Final_Exam"
+author: "Yun Mai"
+date: "May 19, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=F}
+library(knitr)
+```
+
+#DATA 606 Spring 2017 - Final Exam
+
+##Part I
+
+
+1. A student is gathering data on the driving experiences of other college students. A description of the data car color is presented below. Which of the variables are quantitative and discrete?
+
+  car.       1 = compact, 2 = standard size, 3 = mini van, 4 = SUV, and 5 = truck
+
+  color.     red, blue, green, black, white
+
+  daysDrive. number of days per week the student drives
+
+  gasMonth.  the amount of money the student spends on gas per month
+
+a. car
+
+b. daysDrive
+
+c. daysDrive, car
+
+d. daysDrive, gasMonth
+
+e. car, daysDrive, gasMonth
+
+Answer: c
+
+2. A histogram of the GPA of 132 students from this course in Fall 2012 class is presented below. Which estimates of the mean and median are most plausible?
+
+!()
+
+a. mean = 3.3, median = 3.5
+
+b. mean = 3.5, median = 3.3
+
+c. mean = 2.9, median = 3.8
+
+d. mean = 3.8, median = 2.9
+
+e. mean = 2.5, median = 3.8
+
+Answer: c
+
+
+3. A researcher wants to determine if a new treatment is effective for reducing Ebola related fever. What type of study should be conducted in order to establish that the treatment does indeed cause improvement in Ebola patients?
+
+a. Randomly assign Ebola patients to one of two groups, either the treatment or placebo group, and then compare the fever of the two groups.
+
+b. Identify Ebola patients who received the new treatment and those who did not, and then compare the fever of those two groups.
+
+c. Identify clusters of villages and then stratify them by gender and compare the fevers of male and female groups.
+
+d. Both studies (a) and (b) can be conducted in order to establish that the treatment does indeed cause improvement with regards to fever in Ebola patients.
+
+Answer: a
+
+4. A study is designed to test whether there is a relationship between natural hair color (brunette, blond, red) and eye color (blue, green, brown). If a large $x^2$ test statistic is obtained, this suggests that:
+
+a. there is a difference between average eye color and average hair color.
+
+b. a person's hair color is determined by his or her eye color.
+
+c. there is an association between natural hair color and eye color.
+
+d. eye color and natural hair color are independent
+
+Answer:c
+
+5. A researcher studying how monkeys remember is interested in examining the distribution of the score on a standard memory task. The researcher wants to produce a boxplot to examine this distribution. Below are summary statistics from the memory task. What values should the researcher use to determine if a
+particular score is a potential outlier in the boxplot?
+
+```{r}
+a<-data.frame(min=26, Q1=37, median=45, Q3=49.8, max=65, mean=44.4, sd=8.4, n=50
+)
+kable(a)
+```
+
+a. 37.0 and 49.8
+
+b. 17.8 and 69.0
+
+c. 36.0 and 52.8
+
+d. 26.0 and 50.0
+
+e. 19.2 and 69.9
+
+Answer: b
+
+
+6. The______are resistant to outliers, whereas the______are not.
+
+a. mean and median; standard deviation and interquartile range
+
+b. mean and standard deviation; median and interquartile range
+
+c. standard deviation and interquartile range; mean and median
+
+d. median and interquartile range; mean and standard deviation
+
+e. median and standard deviation; mean and interquartile range
+
+Answer: C
+
+7. Figure A below represents the distribution of an observed variable. Figure B below represents the distribution of the mean from 500 random samples of size 30 from A. The mean of A is 5.05 and the mean of B is 5.04. The standard deviations of A and B are 3.22 and 0.58, respectively.
+
+a. Describe the two distributions (2 pts).
+
+A: the distribution is unimodal and right skewed.
+B: the distribution is unimodal and nearly normal.
+
+b. Explain why the means of these two distributions are similar but the standard deviations are not (2 pts).
+
+The means of these two distributions are similar is because the sample means should tend to "fall around" the population mean.
+
+standard deviations of these two distributions are not similar because standard deviation of population mean is the standard deviation of the sample mean tells us how far the typical estimate is away from the actual population mean. standard deviation of an observed variable is how far an the observation is to the mean of the observed variable.
+
+c. What is the statistical principal that describes this phenomenon (2 pts)?
+
+The statistical principal that describes this phenomenon is Central Limit Theorem.If a sample consists of at least 30 independent observations and the data are not strongly skewed, then the distribution of the sample mean is well approximated by a normal model.
+
+##Part II
+
+Consider the four datasets, each with two columns (x and y), provided below.
+
+```{r}
+options(digits=2)
+data1 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68))
+data2 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(9.14,8.14,8.74,8.77,9.26,8.1,6.13,3.1,9.13,7.26,4.74))
+data3 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(7.46,6.77,12.74,7.11,7.81,8.84,6.08,5.39,8.15,6.42,5.73))
+data4 <- data.frame(x=c(8,8,8,8,8,8,8,19,8,8,8),
+y=c(6.58,5.76,7.71,8.84,8.47,7.04,5.25,12.5,5.56,7.91,6.89))
+
+data <- as.data.frame(cbind(data1,data2,data3,data4))
+colnames(data) <- c("data1.x","data1.y","data2.x","data2.y","data3.x","data3.y","data4.x","data4.y")
+kable(data)
+```
+
+For each column, calculate (to two decimal places):
+
+a. The mean (for x and y separately; 1 pt).
+```{r}
+mean_data1.x <- format(round(mean(data$data1.x),2),nsmall=2)
+paste("mean_data1.x:",mean_data1.x)
+
+mean_data1.y <- format(round(mean(data$data1.y),2),nsmall=2)
+paste("mean_data1.y:",mean_data1.y)
+
+mean_data2.x <- format(round(mean(data$data2.x),2),nsmall=2)
+paste("mean_data2.x:",mean_data2.x)
+
+mean_data2.y <- format(round(mean(data$data2.y),2),nsmall=2)
+paste("mean_data2.y:",mean_data2.y)
+
+mean_data3.x <- format(round(mean(data$data3.x),2),nsmall=2)
+paste("mean_data2.x:",mean_data2.x)
+
+mean_data3.y <- format(round(mean(data$data3.y),2),nsmall=2)
+paste("mean_data3.y:",mean_data3.y)
+
+mean_data4.x <- format(round(mean(data$data4.x),2),nsmall=2)
+paste("mean_data2.x:",mean_data2.x)
+
+mean_data4.y <- format(round(mean(data$data4.y),2),nsmall=2)
+paste("mean_data4.y:",mean_data4.y)
+```
+
+b. The median (for x and y separately; 1 pt).
+```{r}
+median_data1.x <- format(round(median(data$data1.x),1),nsmall=1)
+paste("median_data1.x:",median_data1.x)
+
+median_data1.y <- format(round(median(data$data1.y),1),nsmall=1)
+paste("median_data1.y:",median_data1.y)
+
+median_data2.x <- format(round(median(data$data2.x),1),nsmall=1)
+paste("median_data2.x:",median_data2.x)
+
+median_data2.y <- format(round(median(data$data2.y),1),nsmall=1)
+paste("median_data2.y:",median_data2.y)
+
+median_data3.x <- format(round(median(data$data3.x),1),nsmall=1)
+paste("median_data2.x:",median_data2.x)
+
+median_data3.y <- format(round(median(data$data3.y),1),nsmall=1)
+paste("median_data3.y:",median_data3.y)
+
+median_data4.x <- format(round(median(data$data4.x),1),nsmall=1)
+paste("median_data2.x:",median_data2.x)
+
+median_data4.y <- format(round(median(data$data4.y),3),nsmall=1)
+paste("median_data4.y:",median_data4.y)
+```
+
+c. The standard deviation (for x and y separately; 1 pt).
+```{r}
+sd_data1.x <- format(round(sd(data$data1.x),2),nsmall=2)
+paste("sd_data1.x:",sd_data1.x)
+
+sd_data1.y <- format(round(sd(data$data1.y),2),nsmall=2)
+paste("sd_data1.y:",sd_data1.y)
+
+sd_data2.x <- format(round(sd(data$data2.x),2),nsmall=2)
+paste("sd_data2.x:",sd_data2.x)
+
+sd_data2.y <- format(round(sd(data$data2.y),2),nsmall=2)
+paste("sd_data2.y:",sd_data2.y)
+
+sd_data3.x <- format(round(sd(data$data3.x),2),nsmall=2)
+paste("sd_data2.x:",sd_data2.x)
+
+sd_data3.y <- format(round(sd(data$data3.y),2),nsmall=2)
+paste("sd_data3.y:",sd_data3.y)
+
+sd_data4.x <- format(round(sd(data$data4.x),2),nsmall=2)
+paste("sd_data2.x:",sd_data2.x)
+
+sd_data4.y <- format(round(sd(data$data4.y),2),nsmall=2)
+paste("sd_data4.y:",sd_data4.y)
+```
+
+For each x and y pair, calculate (also to two decimal places; 1 pt):
+
+d. The correlation (1 pt).
+
+```{r}
+cor(data1$x, data1$y)
+cor(data2$x, data2$y)
+cor(data3$x, data3$y)
+cor(data4$x, data4$y)
+```
+
+
+e. Linear regression equation (2 pts).
+```{r}
+m1 <- lm(data1$y ~ data1$x)
+summary(m1)
+
+m2 <- lm(data2$y ~ data2$x)
+summary(m2)
+
+m3 <- lm(data3$y ~ data3$x)
+summary(m2)
+
+m4 <- lm(data4$y ~ data4$x)
+summary(m4)
+```
+
+Linear regression equation for data1:
+$$\hat{y}= 3+0.5\times x$$
+
+Linear regression equation for data1:
+$$\hat{y}= 3+0.5\times x$$
+
+Linear regression equation for data1:
+$$\hat{y}= 3+0.5\times x$$
+
+Linear regression equation for data1:
+$$\hat{y}= 3+0.5\times x$$
+
+f. R-Squared (2 pts).
+
+For each pair, is it appropriate to estimate a linear regression model? Why or why not? Be specific as to why for each pair and include appropriate plots! (4 pts) 
+
+```{r}
+plot(data1$y ~ data1$x)
+abline(m1)
+```
+
+```
+The plot above for data1 shows a upward linear trend. It is appropriate to estimate whether the linear regression model is reliable.
+```
+
+```{r}
+plot(data2$y ~ data2$x)
+abline(m2)
+```
+
+```
+The plot above shows x and y from data2 has a very strong relationship but the trend is not linear. A straight line could not fit the data. Since it is a non-linear relationship, it is not appropriate to estimate the linear regression model.
+```
+
+```{r}
+plot(data3$y ~ data3$x)
+abline(m3)
+```
+
+```
+The plot above shows x and y from data3 has a very strong linear relationship but there are non-normal residuals. There is outliers and the point is very far away from the line. Since it is linear relationship, it is appropriate to estimate the linear model.
+```
+
+```{r}
+plot(data4$y ~ data4$x)
+abline(m4)
+```
+
+```
+The plot above shows that x and y from data4 has no linear relationship. Since there is no linear relationship, it is not appropriate to estimate the linear regression model.
+```
+
+Explain why it is important to include appropriate visualizations when analyzing data. Include any visualization(s) you create. (2 pts)
+
+```
+From the scatterplot, we can check linearity in the first place to see whether a straight line model is appropriate or not. acess whether the linear regression modle is reliable, besides linearity, we should also check: nearly normal residuals, constant variability, and independent observations.
+
+As for data1, we can acess whether the linear regression modle is reliable by using visalizations to do model diagnostics.
+```
+Linearity: is the relationship between x and y linear?
+```{r}
+plot(m1$residuals ~ data1$x)
+abline(h = 0, lty = 3)  
+```
+
+Nearly normal residuals:
+```{r}
+qqnorm(m1$residuals)
+qqline(m1$residuals)
+```
+
+```
+The normal probability plot of the residuals shows that the residuals is not normal.
+```
+
+Constant variability:
+```{r}
+fitted <- 3+0.5*data1$x
+plot(m1$residuals ~ data1$x)
+abline(h = 0, lty = 3) 
+```
+
+```
+The above plot shows that the variability is nearly constant.
+```
+
+```
+As for data3, we can acess whether the linear regression modle is reliable by using visalizations to do model diagnostics.
+```
+
+Linearity: is the relationship between x and y linear?
+
+```{r}
+plot(m3$residuals ~ data3$x)
+abline(h = 0, lty = 3)  
+```
+
+Nearly normal residuals:
+```{r}
+qqnorm(m3$residuals)
+qqline(m3$residuals)
+```
+
+```
+The normal probability plot of the residuals shows that the residuals is normal except one outlier on the higher end deviated far away from the line.
+```
+
+Constant variability:
+```{r}
+fitted <- 3+0.5*data3$x
+plot(m3$residuals ~ data3$x)
+abline(h = 0, lty = 3) 
+```
+
+```
+The above plot shows that the variability is nearly constant except there one outlier deviated far away from the line.
+```
+
