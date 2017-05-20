@@ -40,9 +40,10 @@ e. car, daysDrive, gasMonth
 
 Answer: c
 
+
 2. A histogram of the GPA of 132 students from this course in Fall 2012 class is presented below. Which estimates of the mean and median are most plausible?
 
-!()
+!(https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_2.png)
 
 a. mean = 3.3, median = 3.5
 
@@ -115,20 +116,24 @@ d. median and interquartile range; mean and standard deviation
 
 e. median and standard deviation; mean and interquartile range
 
-Answer: C
+Answer: c
 
 7. Figure A below represents the distribution of an observed variable. Figure B below represents the distribution of the mean from 500 random samples of size 30 from A. The mean of A is 5.05 and the mean of B is 5.04. The standard deviations of A and B are 3.22 and 0.58, respectively.
 
+!(https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7a.png)
+!(https://raw.githubusercontent.com/YunMai-SPS/DA606/master/DATA606_final%20exam/fe_7b.png)
+
 a. Describe the two distributions (2 pts).
 
-A: the distribution is unimodal and right skewed.
-B: the distribution is unimodal and nearly normal.
+Figure A: the distribution is unimodal and right skewed.
+
+Figure B: the distribution is unimodal and nearly normal.
 
 b. Explain why the means of these two distributions are similar but the standard deviations are not (2 pts).
 
-The means of these two distributions are similar is because the sample means should tend to "fall around" the population mean.
+The means of these two distributions are similar because the sample means should tend to fall around the population mean.
 
-standard deviations of these two distributions are not similar because standard deviation of population mean is the standard deviation of the sample mean tells us how far the typical estimate is away from the actual population mean. standard deviation of an observed variable is how far an the observation is to the mean of the observed variable.
+Standard deviations of these two distributions are not similar because the standard deviation of the sample mean tells us how far the typical estimate of population mean is away from the actual population mean while the standard deviation of an observed variable is how far an observation is to the population mean.
 
 c. What is the statistical principal that describes this phenomenon (2 pts)?
 
@@ -171,13 +176,13 @@ mean_data2.y <- format(round(mean(data$data2.y),2),nsmall=2)
 paste("mean_data2.y:",mean_data2.y)
 
 mean_data3.x <- format(round(mean(data$data3.x),2),nsmall=2)
-paste("mean_data2.x:",mean_data2.x)
+paste("mean_data3.x:",mean_data3.x)
 
 mean_data3.y <- format(round(mean(data$data3.y),2),nsmall=2)
 paste("mean_data3.y:",mean_data3.y)
 
 mean_data4.x <- format(round(mean(data$data4.x),2),nsmall=2)
-paste("mean_data2.x:",mean_data2.x)
+paste("mean_data4.x:",mean_data4.x)
 
 mean_data4.y <- format(round(mean(data$data4.y),2),nsmall=2)
 paste("mean_data4.y:",mean_data4.y)
@@ -198,13 +203,13 @@ median_data2.y <- format(round(median(data$data2.y),1),nsmall=1)
 paste("median_data2.y:",median_data2.y)
 
 median_data3.x <- format(round(median(data$data3.x),1),nsmall=1)
-paste("median_data2.x:",median_data2.x)
+paste("median_data3.x:",median_data3.x)
 
 median_data3.y <- format(round(median(data$data3.y),1),nsmall=1)
 paste("median_data3.y:",median_data3.y)
 
 median_data4.x <- format(round(median(data$data4.x),1),nsmall=1)
-paste("median_data2.x:",median_data2.x)
+paste("median_data4.x:",median_data4.x)
 
 median_data4.y <- format(round(median(data$data4.y),3),nsmall=1)
 paste("median_data4.y:",median_data4.y)
@@ -225,13 +230,13 @@ sd_data2.y <- format(round(sd(data$data2.y),2),nsmall=2)
 paste("sd_data2.y:",sd_data2.y)
 
 sd_data3.x <- format(round(sd(data$data3.x),2),nsmall=2)
-paste("sd_data2.x:",sd_data2.x)
+paste("sd_data3.x:",sd_data3.x)
 
 sd_data3.y <- format(round(sd(data$data3.y),2),nsmall=2)
 paste("sd_data3.y:",sd_data3.y)
 
 sd_data4.x <- format(round(sd(data$data4.x),2),nsmall=2)
-paste("sd_data2.x:",sd_data2.x)
+paste("sd_data4.x:",sd_data4.x)
 
 sd_data4.y <- format(round(sd(data$data4.y),2),nsmall=2)
 paste("sd_data4.y:",sd_data4.y)
@@ -319,10 +324,11 @@ The plot above shows that x and y from data4 has no linear relationship. Since t
 Explain why it is important to include appropriate visualizations when analyzing data. Include any visualization(s) you create. (2 pts)
 
 ```
-From the scatterplot, we can check linearity in the first place to see whether a straight line model is appropriate or not. acess whether the linear regression modle is reliable, besides linearity, we should also check: nearly normal residuals, constant variability, and independent observations.
+From the scatterplot, we can check linearity in the first place to see whether a straight line model is appropriate or not. To acess whether the linear regression modle is reliable, besides linearity, we should also check: nearly normal residuals, constant variability, and independent observations.
+```
 
 As for data1, we can acess whether the linear regression modle is reliable by using visalizations to do model diagnostics.
-```
+
 Linearity: is the relationship between x and y linear?
 ```{r}
 plot(m1$residuals ~ data1$x)
@@ -347,12 +353,11 @@ abline(h = 0, lty = 3)
 ```
 
 ```
-The above plot shows that the variability is nearly constant.
+The above plot shows that the variability is nearly constant.Based on the diagnotic, we conclude linear regression model could not fit data1 as the residuals is not normal.
 ```
 
-```
+
 As for data3, we can acess whether the linear regression modle is reliable by using visalizations to do model diagnostics.
-```
 
 Linearity: is the relationship between x and y linear?
 
@@ -379,6 +384,6 @@ abline(h = 0, lty = 3)
 ```
 
 ```
-The above plot shows that the variability is nearly constant except there one outlier deviated far away from the line.
+The above plot shows that the variability is nearly constant except there one outlier deviated far away from the line. Based on the diagnotic, we conclude linear regression model could not fit data3 since the conditions for linear regression model could not be satisfied.
 ```
-
+When we analyze the data, including visualization is very helpful for us to check whether the data satisfy the conditions for fitting linear regression model.
